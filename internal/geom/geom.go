@@ -225,10 +225,13 @@ func (b Box) String() string {
 	return fmt.Sprintf("[%.6g, %.6g] x [%.6g, %.6g]", b.Min.X, b.Max.X, b.Min.Y, b.Max.Y)
 }
 
-// SortedLexicographic returns the points ordered by x and then y.
+// SortedLexicographic returns the points ordered by x and then y. The caller's slice
+// is left exactly as it was, because the indices of the input are what every other
+// part of the toolkit refers to.
 func SortedLexicographic(points []Point) []Point {
-	sort.Slice(points, func(i, j int) bool { return points[i].Less(points[j]) })
-	return points
+	out := append([]Point(nil), points...)
+	sort.Slice(out, func(i, j int) bool { return out[i].Less(out[j]) })
+	return out
 }
 
 // Deduplicate returns the distinct points in their first appearance order.
